@@ -12,34 +12,42 @@ public class Minesweeper {
      */
     public void startGame() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Welcome to Minesweeper!");
 
-        int size = getSizeInput(scanner);
-        int mineCount = getMineCountInput(scanner, size);
+        while (true) {
+            System.out.println("Welcome to Minesweeper!");
 
-        GameBoard gameBoard = new GameBoard(size, mineCount);
-        gameBoard.displayBoard();
+            int size = getSizeInput(scanner);
+            int mineCount = getMineCountInput(scanner, size);
 
-        while (!gameBoard.isGameOver()) {
-            System.out.print("Select a square to reveal (e.g. A1): ");
-            String input = scanner.next();
-            try {
-                Coordinate coordinate = Coordinate.fromInput(input, size);
-                gameBoard.revealSquare(coordinate);
-                gameBoard.displayBoard();
-            } catch (IllegalArgumentException e) {
-                System.out.println("Incorrect input.");
+            GameBoard gameBoard = new GameBoard(size, mineCount);
+            gameBoard.displayBoard();
+
+            while (!gameBoard.isGameOver()) {
+                System.out.print("Select a square to reveal (e.g. A1): ");
+                String input = scanner.next();
+                try {
+                    Coordinate coordinate = Coordinate.fromInput(input, size);
+                    gameBoard.revealSquare(coordinate);
+                    gameBoard.displayBoard();
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Incorrect input.");
+                }
+            }
+
+            if (gameBoard.isWin()) {
+                System.out.println("Congratulations, you have won the game!");
+            } else {
+                System.out.println("Oh no, you detonated a mine! Game over.");
+            }
+
+            System.out.println("Press any key to play again, or 'q' to quit...");
+            String response = scanner.next();
+            if (response.equalsIgnoreCase("q")) {
+                break;
             }
         }
 
-        if (gameBoard.isWin()) {
-            System.out.println("Congratulations, you have won the game!");
-        } else {
-            System.out.println("Oh no, you detonated a mine! Game over.");
-        }
-
-        System.out.println("Press any key to play again...");
-        scanner.next();
+        scanner.close();
     }
 
     /**
